@@ -70,7 +70,7 @@ router.route('/music')
                 response = "Volume unmuted";
                 break;
             case 'frozen' :
-                addYoutubeQueue('https://www.youtube.com/watch?v=L0MK7qz13bU');
+                addYoutubeQueue('L0MK7qz13bU');
                 break;
 
             case 'volume':
