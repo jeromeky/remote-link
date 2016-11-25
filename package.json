@@ -1,0 +1,9 @@
+{
+    "name": "node-api",
+    "main": "server.js",
+    "dependencies": {
+        "express": "~4.0.0",
+        "opener": "1.4.2",
+        "child_process":"1.0.2"
+    }
+}
