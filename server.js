@@ -189,7 +189,7 @@ router.route('/music')
 
           res.on('end', function() {
             parsed = JSON.parse(body);
-            queue.push({'link' : 'https://www.youtube.com/watch?v=' + youtubeId, 'duration' : parsed.items[0].contentDetails.duration});
+            queue.push({'link' : 'https://www.youtube.com/watch?v=' + youtubeId + '&autoplay=0', 'duration' : parsed.items[0].contentDetails.duration});
 
           });
 
