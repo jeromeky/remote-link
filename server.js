@@ -96,7 +96,7 @@ router.route('/music')
                 }
 
                 //TODO kill first until I find a way to put in a queue
-                // childProcess.exec('Taskkill /IM chrome.exe /F');
+                // childProcess.exec('Taskkill /IM firefox.exe /F');
                 var link = code[2];
 
                 if(validUrl.isUri(link)) {
@@ -111,7 +111,7 @@ router.route('/music')
                         if(id) {
                             addSpotifyQueue(id);    
                         } else {
-                            err = "Invalid spotify url";
+                            err = "Invalid spotify url"
                         }
                         
                     } else {
@@ -140,13 +140,13 @@ router.route('/music')
                 break;
 
             case 'next':
-                childProcess.exec('Taskkill /IM chrome.exe /F');
+                childProcess.exec('Taskkill /IM firefox.exe /F');
                 queue.shift();
                 break;
 
 
             case 'stop':
-                childProcess.exec('Taskkill /IM chrome.exe /F');
+                childProcess.exec('Taskkill /IM firefox.exe /F');
                 response = "Bye bye !";
                 queue = [];
                 break;
@@ -266,7 +266,7 @@ router.route('/music')
 
         if(queue[0].endDate !== 'undefined' && queue[0].endDate) {
             if(moment().isAfter(queue[0].endDate)){
-                childProcess.exec('Taskkill /IM chrome.exe /F');
+                childProcess.exec('Taskkill /IM firefox.exe /F');
                 queue.shift();
             }
 
