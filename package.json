@@ -4,6 +4,7 @@
     "dependencies": {
         "express": "~4.0.0",
         "opener": "1.4.2",
+        "open": "*",
         "child_process":"1.0.2",
         "body-parser": "~1.0.1",
         "valid-url":"1.0.9",
