@@ -246,7 +246,7 @@ router.route('/music')
             totalseconds = hours * 3600  + minutes * 60 + seconds;
         }
 
-        return (parseInt(totalseconds) + 10);
+        return (parseInt(totalseconds) + 15);
     }
 
     function youtubeParser(url){
