@@ -27,10 +27,10 @@ var random = "123";
 router.route('/music')
 
     .post(function(req, res) {
-    	var message = req.body.item.message.message;
+    	var messages = req.body.item.message.message;
 
-        var messages = messages.split(' ');
-        console.log(messages);
+        var message = messag.split(' ');
+        console.log(message);
 
 
         // childProcess.exec('Taskkill /IM chrome.exe /F');
