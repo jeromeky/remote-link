@@ -23,17 +23,17 @@ router.route('/spotify')
     	console.log(req.query.link);
     	random = "yeah";
 
-    	var test = open(req.query.link, function (err, success) {
-    	  if (err) throw err;
-    	  // console.log(success);
-    	  console.log('The user closed the browser');
-    	});
+    	// var test = open(req.query.link, function (err, success) {
+    	//   if (err) throw err;
+    	//   // console.log(success);
+    	//   console.log('The user closed the browser');
+    	// });
     	// console.log(test);
 // taskkill /F /IM iexplore.exe
     	// childProcess.exec('killall firefox')
 
 
-    	// var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
+    	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
     	// console.log(browser);
 
     	res.json({'test':'test'});
