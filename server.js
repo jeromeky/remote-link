@@ -240,13 +240,13 @@ router.route('/music')
 
         if(queue[0].endDate !== 'undefined' && queue[0].endDate) {
             if(moment().isAfter(queue[0].endDate)){
-                // childProcess.exec('Taskkill /IM chrome.exe /F');
+                childProcess.exec('Taskkill /IM chrome.exe /F');
                 queue.shift();
             }
 
         } else {
             console.log('first time to play music');
-            // var browser = opener(queue[0].link);
+            var browser = opener(queue[0].link);
             queue[0].endDate = moment().add(convertISO8601ToSeconds(queue[0].duration), 'seconds')
         }
 
