@@ -48,13 +48,13 @@ router.route('/music')
     	// console.log(test);
 // taskkill /F /IM iexplore.exe
 
-        childProcess.execFile('nircmd.exe', 'mutesysvolume 0', function (err, data){
+        childProcess.execFile('nircmd.exe', ['mutesysvolume', '0'], function (err, data){
             console.log(err)
             console.log(data.toString());    
         });
     	
 
-    	var browser = opener(link);
+    	// var browser = opener(link);
     	// console.log(browser);
 
     	res.json({'test':'test'});
