@@ -55,11 +55,11 @@ router.route('/music')
                 break;
             case 'mute' :
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '1']);
-                message = "Volume muted";
+                response = "Volume muted";
                 break;
             case 'unmute' :
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
-                message = "Volume unmuted";
+                response = "Volume unmuted";
                 break;
             case 'volume':
                 console.log('volumeup');
@@ -72,7 +72,7 @@ router.route('/music')
                         childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
                     }
 
-                    message = "Volume changed";
+                    response = "Volume changed";
                 });
                 break;
             case 'play':
@@ -89,7 +89,7 @@ router.route('/music')
 
                 if(validUrl.isUri(link)) {
                     var browser = opener(link);
-                    message = "Music played";
+                    response = "Music played";
                 } else {
                     err = "Invalid link";
                 }
@@ -97,7 +97,7 @@ router.route('/music')
                 break;
             case 'stop':
                 childProcess.exec('Taskkill /IM chrome.exe /F');
-                message = "Bye bye !";
+                response = "Bye bye !";
                 break;
 
 
