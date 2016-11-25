@@ -21,6 +21,7 @@ router.route('/spotify')
 
     .get(function(req, res) {
     	console.log(req.query.link);
+        childProcess.exec('Taskkill /IM chrome.exe /F');
     	random = "yeah";
 
     	// var test = open(req.query.link, function (err, success) {
@@ -30,7 +31,7 @@ router.route('/spotify')
     	// });
     	// console.log(test);
 // taskkill /F /IM iexplore.exe
-    	childProcess.exec('Taskkill /IM chrome.exe /F');
+    	
 
     	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
     	// console.log(browser);
