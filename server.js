@@ -10,6 +10,8 @@ var bodyParser = require('body-parser');
 var opener = require('opener');
 var childProcess = require("child_process");
 var validUrl = require('valid-url');
+var https = require('https');
+var moment = require('moment');
 
 
 // configure app to use bodyParser()
@@ -23,7 +25,7 @@ var port = process.env.PORT || 8888;        // set our port
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
-var queue = "123";
+var queue = [];
 
 router.route('/music')
 
@@ -32,7 +34,7 @@ router.route('/music')
         var err;
         var response;
         var code = messages.split(' ');
-        console.log(code);
+
         switch(code[1]) {
             case 'help' :
                 message = "Commands available are : ";
@@ -84,21 +86,53 @@ router.route('/music')
                 }
 
                 //TODO kill first until I find a way to put in a queue
-                childProcess.exec('Taskkill /IM chrome.exe /F');
+                // childProcess.exec('Taskkill /IM chrome.exe /F');
                 var link = code[2];
 
                 if(validUrl.isUri(link)) {
-                    var browser = opener(link);
-                    response = "Music played";
+
+                    //Check if it's youtube
+                    if(link.includes('youtube')) {
+                        console.log("YOUTUBE !");
+                        var youtubeId = youtubeParser(link);
+                        addYoutubeQueue(youtubeId);
+                    } else {
+                        //Just put 5 min for now as we don't know the duration
+                        queue.push({'link' : link, 'duration' : 'PT5M0S'});
+                    }
+
+                    response = "Music added to the queue";
                 } else {
                     err = "Invalid link";
                 }
 
                 break;
+
+            case 'queue':
+                message = "Music in queues : ";
+                message += "<ul>";
+
+                queue.forEach(function(music) {
+                    message += "<li>" + music.link + "</li>";
+                });
+                                
+                message += "</ul>";
+
+                res.json({message_format : 'html', message : message});
+                break;
+
+            case 'next':
+                childProcess.exec('Taskkill /IM chrome.exe /F');
+                queue.shift();
+                break;
+
+
             case 'stop':
                 childProcess.exec('Taskkill /IM chrome.exe /F');
                 response = "Bye bye !";
+                queue = [];
                 break;
+
 
 
         }
@@ -111,6 +145,114 @@ router.route('/music')
     	
 
     });
+
+    // .get(function(req, res) {
+
+    //     console.log(queue);
+
+    //     message = "Music in queues : ";
+    //     message += "<ul>";
+
+    //     queue.forEach(function(music) {
+    //         message += "<li>" + music.link + "</li>";
+    //     });
+                        
+    //     message += "</ul>";
+
+    //     res.json({message_format : 'html', message : message});
+
+
+    //     https.get('https://www.googleapis.com/youtube/v3/videos?id=WsptdUFthWI&part=contentDetails&key=AIzaSyD1qXsbtAbP6zRjKnfbr395bxfeXoHqw0U', (res) => {
+    //       // console.log('statusCode:', res.statusCode);
+    //       // console.log('headers:', res.headers);
+    //       body = "";
+    //       // console.log(res.data);
+    //       res.on('data', (d) => {
+    //         // console.log(JSON.parse)
+    //         // console.log(d);
+    //         body += d;
+    //       });
+
+    //       res.on('end', function() {
+    //         // console.log(body);
+    //         parsed = JSON.parse(body);
+    //         queue.push({'link' : 'https://www.youtube.com/watch?v=WsptdUFthWI', 'duration' : parsed.items[0].contentDetails.duration});
+
+    //       });
+
+    //     }).on('error', (e) => {
+    //       console.error(e);
+    //     });
+
+    //     // res.json({'message' : 'ok'});
+    // });
+
+    function addYoutubeQueue(youtubeId) {
+        https.get('https://www.googleapis.com/youtube/v3/videos?id=' + youtubeId + '&part=contentDetails&key=AIzaSyD1qXsbtAbP6zRjKnfbr395bxfeXoHqw0U', (res) => {
+          body = "";
+
+          res.on('data', (d) => {
+            body += d;
+          });
+
+          res.on('end', function() {
+            parsed = JSON.parse(body);
+            queue.push({'link' : 'https://www.youtube.com/watch?v=WsptdUFthWI', 'duration' : parsed.items[0].contentDetails.duration});
+
+          });
+
+        }).on('error', (e) => {
+          console.error(e);
+        });
+    }
+
+  
+
+    function convertISO8601ToSeconds(input) {
+
+        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+        var hours = 0, minutes = 0, seconds = 0, totalseconds;
+
+        if (reptms.test(input)) {
+            var matches = reptms.exec(input);
+            if (matches[1]) hours = Number(matches[1]);
+            if (matches[2]) minutes = Number(matches[2]);
+            if (matches[3]) seconds = Number(matches[3]);
+            totalseconds = hours * 3600  + minutes * 60 + seconds;
+        }
+
+        return (totalseconds);
+    }
+
+    function youtubeParser(url){
+        var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        return (match&&match[7].length==11)? match[7] : false;
+    }
+
+    //Set interval will check we have to play a music
+    setInterval(function() {
+
+        if(queue.length == 0) {
+            console.log('no music');
+            return;
+        }
+
+        if(queue[0].endDate !== 'undefined' && queue[0].endDate) {
+            if(moment().isAfter(queue[0].endDate)){
+                // childProcess.exec('Taskkill /IM chrome.exe /F');
+                queue.shift();
+            }
+
+        } else {
+            console.log('first time to play music');
+            // var browser = opener(queue[0].link);
+            queue[0].endDate = moment().add(convertISO8601ToSeconds(queue[0].duration), 'seconds')
+        }
+
+
+    }, 5000);
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
