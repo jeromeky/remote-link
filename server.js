@@ -27,7 +27,11 @@ var random = "123";
 router.route('/music')
 
     .post(function(req, res) {
-    	console.log(req.item.message.message);
+    	var message = req.body.item.message.message;
+
+        messages = messages.split(' ');
+        console.log(messages);
+
 
         // childProcess.exec('Taskkill /IM chrome.exe /F');
     	random = "yeah";
