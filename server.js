@@ -29,33 +29,59 @@ router.route('/music')
     .post(function(req, res) {
     	var messages = req.body.item.message.message;
 
-        var message = messages.split(' ');
-        console.log(message);
+        var code = message.split(' ');
 
-        var link = message[1];
+        switch(code[1]) {
+            case 'mute' :
+                childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
+                break;
+            case 'unmute' :
+                childProcess.execFile('nircmd.exe', ['mutesysvolume', '1']);
+                break;
+            case 'volumeup':
+                childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
+                break;
+            case 'volumedown':
+                childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
+                break;
+            case 'play':
+                var link = code[2];
+                var browser = opener(link);
+                break;
+            case 'stop':
+                childProcess.exec('Taskkill /IM chrome.exe /F');
+                break;
 
-        console.log(link);
+
+        }
+
+//         var message = messages.split(' ');
+//         console.log(message);
+
+//         var link = message[1];
+
+//         console.log(link);
 
 
-        // childProcess.exec('Taskkill /IM chrome.exe /F');
-    	random = "yeah";
+//         // childProcess.exec('Taskkill /IM chrome.exe /F');
+//     	random = "yeah";
 
-    	// var test = open(req.query.link, function (err, success) {
-    	//   if (err) throw err;
-    	//   // console.log(success);
-    	//   console.log('The user closed the browser');
-    	// });
-    	// console.log(test);
-// taskkill /F /IM iexplore.exe
+//     	// var test = open(req.query.link, function (err, success) {
+//     	//   if (err) throw err;
+//     	//   // console.log(success);
+//     	//   console.log('The user closed the browser');
+//     	// });
+//     	// console.log(test);
+// // taskkill /F /IM iexplore.exe
 
-        childProcess.execFile('nircmd.exe', ['mutesysvolume', '0'], function (err, data){
-            console.log(err)
-            console.log(data.toString());    
-        });
+//         childProcess.execFile('nircmd.exe', ['mutesysvolume', '0'], function (err, data){
+//             console.log(err)
+//             console.log(data.toString());    
+//         });
     	
 
-    	// var browser = opener(link);
-    	// console.log(browser);
+//     	// var browser = opener(link);
+//     	// console.log(browser);
 
     	res.json({'test':'test'});
 
