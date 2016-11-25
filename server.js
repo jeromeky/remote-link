@@ -26,9 +26,9 @@ var random = "123";
 
 router.route('/music')
 
-    .get(function(req, res) {
-    	console.log(req.query.link);
-        childProcess.exec('Taskkill /IM chrome.exe /F');
+    .post(function(req, res) {
+    	console.log(req);
+        // childProcess.exec('Taskkill /IM chrome.exe /F');
     	random = "yeah";
 
     	// var test = open(req.query.link, function (err, success) {
@@ -40,7 +40,7 @@ router.route('/music')
 // taskkill /F /IM iexplore.exe
     	
 
-    	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
+    	// var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
     	// console.log(browser);
 
     	res.json({'test':'test'});
