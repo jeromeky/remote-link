@@ -60,7 +60,9 @@ router.route('/music')
                 //TODO kill first until I find a way to put in a queue
                 childProcess.exec('Taskkill /IM chrome.exe /F');
                 console.log('before wait');
-                wait(10000);
+                setTimeout(function() {
+                    //fake wait
+                }, 3000);
                 console.log('after wait');
                 var link = code[2];
                 var browser = opener(link);
