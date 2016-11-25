@@ -38,16 +38,16 @@ router.route('/music')
                 message = "Commands available are : ";
                 message += "<ul>"+
                                 "<li>"+
-                                    "/music play https://www.youtube.com/watch?v=L0MK7qz13bU : or any link with music on it (spotify / deezer / youtube ...)"+
+                                    "/music play https://www.youtube.com/watch?v=L0MK7qz13bU : or any valid link (spotify / deezer / youtube ...)"+
                                 "</li>"+
                                 "<li>"+
-                                    "/music volume ++++ : Will increase volume"+
+                                    "/music volume ++++ : Increase the volume"+
                                 "</li>"+
                                 "<li>"+
-                                    "/music volume ---- : Will decrease volume"+
+                                    "/music volume ---- : Secrease the volume"+
                                 "</li>"+
                                 "<li>"+
-                                    "/music stop : Will stop the current music"+
+                                    "/music stop : Stop the current music"+
                                 "</li>"+
                             "</ul>";
                 res.json({message_format : 'html', message : message});
@@ -106,7 +106,7 @@ router.route('/music')
         if(err) {
             res.json({message: err, color : 'red'});
         } else {
-            res.json({message:'test'});    
+            res.json({message:response});    
         }
     	
 
