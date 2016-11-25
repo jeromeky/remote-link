@@ -32,7 +32,7 @@ router.route('/music')
         var message = messages.split(' ');
         console.log(message);
 
-        var link = messages[1];
+        var link = message[1];
 
         console.log(link);
 
