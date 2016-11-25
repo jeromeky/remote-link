@@ -34,7 +34,10 @@ router.route('/music')
         switch(code[1]) {
             case 'mute' :
                 console.log('mute');
-                childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
+                childProcess.execFile('nircmd.exe', ['mutesysvolume', '0'], function(err, data) {
+                    console.log(err);
+                    console.log(data);
+                });
                 break;
             case 'unmute' :
                 console.log('unmute');
