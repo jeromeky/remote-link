@@ -49,7 +49,7 @@ router.route('/music')
 // taskkill /F /IM iexplore.exe
     	
 
-    	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
+    	var browser = opener(link);
     	// console.log(browser);
 
     	res.json({'test':'test'});
