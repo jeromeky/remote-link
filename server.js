@@ -51,6 +51,12 @@ router.route('/music')
                                 "<li>"+
                                     "/music stop : Stop the current music"+
                                 "</li>"+
+                                "<li>"+
+                                    "/music next : Skip the current music"+
+                                "</li>"+
+                                "<li>"+
+                                    "/music frozen : Niek speical command : Will add frozen in the queue"+
+                                "</li>"+
                             "</ul>";
                 res.json({message_format : 'html', message : message});
 
@@ -63,12 +69,17 @@ router.route('/music')
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
                 response = "Volume unmuted";
                 break;
+            case 'frozen' :
+                addYoutubeQueue('https://www.youtube.com/watch?v=L0MK7qz13bU');
+                break;
+
             case 'volume':
                 console.log('volumeup');
 
                 var levels = code[2].split('');
                 levels.forEach(function(level) {
                     if(level === '+') {
+                        childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
                         childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
                     } else if(level === '-') {
                         childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
