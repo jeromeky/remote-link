@@ -8,6 +8,7 @@ var express    = require('express');
 var app        = express();
 var bodyParser = require('body-parser');
 var opener = require('opener');
+var open = require('open');
 var childProcess = require("child_process");
 var validUrl = require('valid-url');
 var https = require('https');
@@ -96,7 +97,7 @@ router.route('/music')
                 }
 
                 //TODO kill first until I find a way to put in a queue
-                // childProcess.exec('Taskkill /IM firefox.exe /F');
+                // childProcess.exec('Taskkill /IM chrome.exe /F');
                 var link = code[2];
 
                 if(validUrl.isUri(link)) {
@@ -115,6 +116,11 @@ router.route('/music')
                         }
                         
                     } else {
+                        //TODO STILL NEED TO ADD :
+                        // SOUNDCLOUD
+
+
+
                         //Just put 5 min for now as we don't know the duration
                         queue.push({'link' : link, 'duration' : 'PT5M0S'});
                     }
@@ -140,13 +146,13 @@ router.route('/music')
                 break;
 
             case 'next':
-                childProcess.exec('Taskkill /IM firefox.exe /F');
+                childProcess.exec('Taskkill /IM chrome.exe /F');
                 queue.shift();
                 break;
 
 
             case 'stop':
-                childProcess.exec('Taskkill /IM firefox.exe /F');
+                childProcess.exec('Taskkill /IM chrome.exe /F');
                 response = "Bye bye !";
                 queue = [];
                 break;
@@ -266,14 +272,20 @@ router.route('/music')
 
         if(queue[0].endDate !== 'undefined' && queue[0].endDate) {
             if(moment().isAfter(queue[0].endDate)){
-                childProcess.exec('Taskkill /IM firefox.exe /F');
+                childProcess.exec('Taskkill /IM chrome.exe /F');
                 queue.shift();
             }
 
         } else {
             console.log('first time to play music');
-            var browser = opener(queue[0].link);
-            queue[0].endDate = moment().add(convertISO8601ToSeconds(queue[0].duration), 'seconds')
+            // var browser = opener(queue[0].link);
+
+            open(queue[0].link, function (err) {
+              if (err) throw err;
+              queue[0].endDate = moment().add(convertISO8601ToSeconds(queue[0].duration), 'seconds')
+            });
+
+            
         }
 
 
