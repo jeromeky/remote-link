@@ -29,7 +29,7 @@ router.route('/music')
     .post(function(req, res) {
     	var messages = req.body.item.message.message;
 
-        var message = messag.split(' ');
+        var message = messages.split(' ');
         console.log(message);
 
 
