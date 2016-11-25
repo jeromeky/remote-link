@@ -30,7 +30,7 @@ router.route('/spotify')
     	// });
     	// console.log(test);
 // taskkill /F /IM iexplore.exe
-    	childProcess.exec('Taskkill /IM firefox.exe /F');
+    	childProcess.exec('Taskkill /IM chrome.exe /F');
 
     	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
     	// console.log(browser);
