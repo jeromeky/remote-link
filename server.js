@@ -30,25 +30,31 @@ router.route('/music')
     	var messages = req.body.item.message.message;
 
         var code = messages.split(' ');
-
+        console.log(code);
         switch(code[1]) {
             case 'mute' :
+                console.log('mute');
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
                 break;
             case 'unmute' :
+                console.log('unmute');
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '1']);
                 break;
             case 'volumeup':
+                console.log('volumeup');
                 childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
                 break;
             case 'volumedown':
+                console.log('volumedown');
                 childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
                 break;
             case 'play':
+                console.log('play');
                 var link = code[2];
                 var browser = opener(link);
                 break;
             case 'stop':
+                console.log('stop');
                 childProcess.exec('Taskkill /IM chrome.exe /F');
                 break;
 
