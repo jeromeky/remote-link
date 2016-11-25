@@ -47,6 +47,8 @@ router.route('/music')
     	// });
     	// console.log(test);
 // taskkill /F /IM iexplore.exe
+
+        childProcess.execFile('nircmd.exe mutesysvolume 0');
     	
 
     	var browser = opener(link);
