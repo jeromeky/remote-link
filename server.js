@@ -32,7 +32,7 @@ router.route('/music')
         var message = messages.split(' ');
         console.log(message);
 
-        var link = messages[1];
+        var music = messages[1];
 
 
         // childProcess.exec('Taskkill /IM chrome.exe /F');
@@ -47,7 +47,7 @@ router.route('/music')
 // taskkill /F /IM iexplore.exe
     	
 
-    	var browser = opener(link);
+    	var browser = opener('https://open.spotify.com/track/6fujklziTHa8uoM5OQSfIo');
     	// console.log(browser);
 
     	res.json({'test':'test'});
