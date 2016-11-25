@@ -40,9 +40,19 @@ router.route('/music')
                 console.log('unmute');
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
                 break;
-            case 'volumeup':
+            case 'volume':
                 console.log('volumeup');
-                childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
+
+                var levels = code[2].split('');
+                levels.forEach(function(level) {
+                    if(level === '+') {
+                        childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
+                        console.log('volume up');
+                    } else if(level === '-') {
+                        childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
+                        console.log('volume down');
+                    }
+                });
                 break;
             case 'volumedown':
                 console.log('volumedown');
