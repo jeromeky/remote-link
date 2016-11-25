@@ -9,6 +9,7 @@ var app        = express();
 var bodyParser = require('body-parser');
 var opener = require('opener');
 var childProcess = require("child_process");
+var sleep = require('sleep');
 
 
 // configure app to use bodyParser()
@@ -60,9 +61,7 @@ router.route('/music')
                 //TODO kill first until I find a way to put in a queue
                 childProcess.exec('Taskkill /IM chrome.exe /F');
                 console.log('before wait');
-                setTimeout(function() {
-                    //fake wait
-                }, 3000);
+                sleep(5);
                 console.log('after wait');
                 var link = code[2];
                 var browser = opener(link);
