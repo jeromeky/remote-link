@@ -13,7 +13,6 @@ var validUrl = require('valid-url');
 var https = require('https');
 var moment = require('moment');
 
-
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -107,6 +106,14 @@ router.route('/music')
                         console.log("YOUTUBE !");
                         var youtubeId = youtubeParser(link);
                         addYoutubeQueue(youtubeId);
+                    } else if(link.includes('spotify')) {
+                        var id = (spotifyParser('https://open.spotify.com/track/7lQqaqZu0vjxzpdATOIsDt'));
+                        if(id) {
+                            addSpotifyQueue(id);    
+                        } else {
+                            err = "Invalid spotify url";
+                        }
+                        
                     } else {
                         //Just put 5 min for now as we don't know the duration
                         queue.push({'link' : link, 'duration' : 'PT5M0S'});
@@ -155,48 +162,16 @@ router.route('/music')
         }
     	
 
+    })
+
+
+    .get(function(req, res) {
+
+        var id = (spotifyParser('https://open.spotify.com/track/7lQqaqZu0vjxzpdATOIsDt'));
+
+        addSpotifyQueue(id);
+        console.log('test');
     });
-
-    // .get(function(req, res) {
-
-    //     console.log(queue);
-
-    //     message = "Music in queues : ";
-    //     message += "<ul>";
-
-    //     queue.forEach(function(music) {
-    //         message += "<li>" + music.link + "</li>";
-    //     });
-                        
-    //     message += "</ul>";
-
-    //     res.json({message_format : 'html', message : message});
-
-
-    //     https.get('https://www.googleapis.com/youtube/v3/videos?id=WsptdUFthWI&part=contentDetails&key=AIzaSyD1qXsbtAbP6zRjKnfbr395bxfeXoHqw0U', (res) => {
-    //       // console.log('statusCode:', res.statusCode);
-    //       // console.log('headers:', res.headers);
-    //       body = "";
-    //       // console.log(res.data);
-    //       res.on('data', (d) => {
-    //         // console.log(JSON.parse)
-    //         // console.log(d);
-    //         body += d;
-    //       });
-
-    //       res.on('end', function() {
-    //         // console.log(body);
-    //         parsed = JSON.parse(body);
-    //         queue.push({'link' : 'https://www.youtube.com/watch?v=WsptdUFthWI', 'duration' : parsed.items[0].contentDetails.duration});
-
-    //       });
-
-    //     }).on('error', (e) => {
-    //       console.error(e);
-    //     });
-
-    //     // res.json({'message' : 'ok'});
-    // });
 
     function addYoutubeQueue(youtubeId) {
         https.get('https://www.googleapis.com/youtube/v3/videos?id=' + youtubeId + '&part=contentDetails&key=AIzaSyD1qXsbtAbP6zRjKnfbr395bxfeXoHqw0U', (res) => {
@@ -209,6 +184,39 @@ router.route('/music')
           res.on('end', function() {
             parsed = JSON.parse(body);
             queue.push({'link' : 'https://www.youtube.com/watch?v=' + youtubeId, 'duration' : parsed.items[0].contentDetails.duration});
+
+          });
+
+        }).on('error', (e) => {
+          console.error(e);
+        });
+    }
+
+    function addSpotifyQueue(spotifyId) {
+        // spotify:track:7lQqaqZu0vjxzpdATOIsDt
+
+        // https://api.spotify.com/v1/tracks/7lQqaqZu0vjxzpdATOIsDt
+
+        https.get('https://api.spotify.com/v1/tracks/' + spotifyId, (res) => {
+          body = "";
+
+          res.on('data', (d) => {
+            body += d;
+          });
+
+          res.on('end', function() {
+            parsed = JSON.parse(body);
+            console.log(parsed);
+            console.log(parsed.duration_ms);
+
+            var minutes = Math.floor(parsed.duration_ms / 60000);
+            var seconds = ((parsed.duration_ms % 60000) / 1000).toFixed(0);
+            //Because it takes about 5 seconds to launch spotify web
+            seconds = parseInt(seconds) + 5;
+            console.log(seconds);
+
+            //Convert durationMS in ISO8601
+            queue.push({'link' : 'https://open.spotify.com/track/' + spotifyId, 'duration' : 'PT' + minutes + "M" + seconds + "S"});
 
           });
 
@@ -239,6 +247,13 @@ router.route('/music')
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
         var match = url.match(regExp);
         return (match&&match[7].length==11)? match[7] : false;
+    }
+
+
+    function spotifyParser(url){
+        // https://play.spotify.com/album/4rnl39iMQXOYZcw9J7ml4y
+        // https://open.spotify.com/track/7lQqaqZu0vjxzpdATOIsDt
+        return url.split('/track/')[1];
     }
 
     //Set interval will check we have to play a music
