@@ -23,23 +23,43 @@ var port = process.env.PORT || 8888;        // set our port
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
-var random = "123";
+var queue = "123";
 
 router.route('/music')
 
     .post(function(req, res) {
     	var messages = req.body.item.message.message;
         var err;
+        var response;
         var code = messages.split(' ');
         console.log(code);
         switch(code[1]) {
+            case 'help' :
+                message = "Commands available are : ";
+                message += "<ul>"+
+                                "<li>"+
+                                    "/music play https://www.youtube.com/watch?v=L0MK7qz13bU : or any link with music on it (spotify / deezer / youtube ...)"+
+                                "</li>"+
+                                "<li>"+
+                                    "/music volume ++++ : Will increase volume"+
+                                "</li>"+
+                                "<li>"+
+                                    "/music volume ---- : Will decrease volume"+
+                                "</li>"+
+                                "<li>"+
+                                    "/music stop : Will stop the current music"+
+                                "</li>"+
+                            "</ul>";
+                res.json({message_format : 'html', message : message});
+
+                break;
             case 'mute' :
-                console.log('mute');
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '1']);
+                message = "Volume muted";
                 break;
             case 'unmute' :
-                console.log('unmute');
                 childProcess.execFile('nircmd.exe', ['mutesysvolume', '0']);
+                message = "Volume unmuted";
                 break;
             case 'volume':
                 console.log('volumeup');
@@ -48,15 +68,20 @@ router.route('/music')
                 levels.forEach(function(level) {
                     if(level === '+') {
                         childProcess.execFile('nircmd.exe', ['changesysvolume', '5000']);
-                        console.log('volume up');
                     } else if(level === '-') {
                         childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
-                        console.log('volume down');
                     }
+
+                    message = "Volume changed";
                 });
                 break;
             case 'play':
                 console.log('play');
+
+                if(code.length < 3) {
+                    err = "Missing link";
+                    break;
+                }
 
                 //TODO kill first until I find a way to put in a queue
                 childProcess.exec('Taskkill /IM chrome.exe /F');
@@ -64,46 +89,19 @@ router.route('/music')
 
                 if(validUrl.isUri(link)) {
                     var browser = opener(link);
+                    message = "Music played";
                 } else {
                     err = "Invalid link";
                 }
 
                 break;
             case 'stop':
-                console.log('stop');
                 childProcess.exec('Taskkill /IM chrome.exe /F');
+                message = "Bye bye !";
                 break;
 
 
         }
-
-//         var message = messages.split(' ');
-//         console.log(message);
-
-//         var link = message[1];
-
-//         console.log(link);
-
-
-//         // childProcess.exec('Taskkill /IM chrome.exe /F');
-//     	random = "yeah";
-
-//     	// var test = open(req.query.link, function (err, success) {
-//     	//   if (err) throw err;
-//     	//   // console.log(success);
-//     	//   console.log('The user closed the browser');
-//     	// });
-//     	// console.log(test);
-// // taskkill /F /IM iexplore.exe
-
-//         childProcess.execFile('nircmd.exe', ['mutesysvolume', '0'], function (err, data){
-//             console.log(err)
-//             console.log(data.toString());    
-//         });
-    	
-
-//     	// var browser = opener(link);
-//     	// console.log(browser);
 
         if(err) {
             res.json({message: err, color : 'red'});
