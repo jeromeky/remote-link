@@ -29,7 +29,7 @@ router.route('/music')
     .post(function(req, res) {
     	var messages = req.body.item.message.message;
 
-        var code = message.split(' ');
+        var code = messages.split(' ');
 
         switch(code[1]) {
             case 'mute' :
