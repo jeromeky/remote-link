@@ -54,12 +54,11 @@ router.route('/music')
                     }
                 });
                 break;
-            case 'volumedown':
-                console.log('volumedown');
-                childProcess.execFile('nircmd.exe', ['changesysvolume', '-5000']);
-                break;
             case 'play':
                 console.log('play');
+
+                //TODO kill first until I find a way to put in a queue
+                childProcess.exec('Taskkill /IM chrome.exe /F');
                 var link = code[2];
                 var browser = opener(link);
                 break;
