@@ -32,7 +32,9 @@ router.route('/music')
         var message = messages.split(' ');
         console.log(message);
 
-        var music = messages[1];
+        var link = messages[1];
+
+        console.log(link);
 
 
         // childProcess.exec('Taskkill /IM chrome.exe /F');
