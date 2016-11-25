@@ -9,6 +9,7 @@ var app        = express();
 var bodyParser = require('body-parser');
 var opener = require('opener');
 var childProcess = require("child_process");
+var validUrl = require('valid-url');
 
 
 // configure app to use bodyParser()
@@ -28,7 +29,7 @@ router.route('/music')
 
     .post(function(req, res) {
     	var messages = req.body.item.message.message;
-
+        var err;
         var code = messages.split(' ');
         console.log(code);
         switch(code[1]) {
@@ -60,7 +61,13 @@ router.route('/music')
                 //TODO kill first until I find a way to put in a queue
                 childProcess.exec('Taskkill /IM chrome.exe /F');
                 var link = code[2];
-                var browser = opener(link);
+
+                if(validUrl.isUri(link)) {
+                    var browser = opener(link);
+                } else {
+                    err = "Invalid link";
+                }
+
                 break;
             case 'stop':
                 console.log('stop');
@@ -98,7 +105,12 @@ router.route('/music')
 //     	// var browser = opener(link);
 //     	// console.log(browser);
 
-    	res.json({'test':'test'});
+        if(err) {
+            res.json({message: err, color : 'red'});
+        } else {
+            res.json({message:'test'});    
+        }
+    	
 
     });
 
